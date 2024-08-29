@@ -7,7 +7,7 @@
 - This is my personal portfolio showcasing my skills, projects, and contact information
 
 <p align="center">
-  <img src="img\img\my_portfolio_image.PNG" alt="Portfolio Image" />
+  <img src="img\my_portfolio_image.PNG" alt="Portfolio Image" />
 </p>
 
 ## Features
