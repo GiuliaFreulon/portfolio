@@ -28,7 +28,7 @@ To view this project locally, follow these steps:
 
 **OR**
 
-- Visit this link: xxx
+- Visit this link: [my portfolio](https://giulia-freulon-portfolio.vercel.app)
 
 ## License
 
