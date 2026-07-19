@@ -1,34 +1,84 @@
-<p align="center">
-  <img src="img\my_portfolio_banner.png" alt="Portfolio Banner" />
-</p>
+# My Portfolio — Giulia Freulon
+
+This is my personal portfolio. I'm a **Software Developer** focused on **Back-end**, **Artificial Intelligence**, and **Automation**.
+
+**Live site:** [giulia-freulon-portfolio.vercel.app](https://giulia-freulon-portfolio.vercel.app)
 
 ## Overview
 
-- This is my personal portfolio showcasing my skills, projects, and contact information
+I built this site to showcase my professional path, technical skills, and projects — from academic work to AI experiments and my current role building intelligent systems.
 
-<p align="center">
-  <img src="img\my_portfolio_image.PNG" alt="Portfolio Image" />
-</p>
+## What's inside
+
+- **About me** — a short introduction to who I am and what I work on
+- **Experience** — an interactive timeline of my career
+- **Main project** — my undergraduate thesis: a RAG system for medical teleconsultations
+- **AI experiments** — learning projects with LangChain and LangGraph
+- **Academic projects** — work I developed during my Computer Science degree
+- **Technologies** — my stack organized by category
+- **Soft Skills & Agile** — how I collaborate and work in teams
+- **GitHub & Contact** — where you can find me and download my CV
 
 ## Features
 
-- **Interactive Navbar**: Easily navigate between sections such as About Me, Skills, Projects, and Contact
-- **About Me**: A brief introduction to who I am and my background
-- **Hard and Soft Skills**: Highlights my technical expertise (hard skills) and interpersonal strengths (soft skills)
-- **Projects**: A collection of my past and current work, with detailed descriptions
-- **Contact Section**: Connect with me through social media or email
-- The website is fully responsive for mobile devices, ensuring a smooth experience across different screen sizes
+- Fully responsive layout for desktop and mobile
+- **Dark mode** by default, with a **light mode** toggle
+- Language switch between **Portuguese** (default) and **English**
+- CV download that matches the selected language
+- Theme and language preferences saved in the browser
+- Subtle animations and an expandable experience timeline
 
-## Installation and Usage
+## Tech stack
 
-To view this project locally, follow these steps:
+| Layer | Choice |
+|--------|--------|
+| Markup | HTML5 |
+| Styling | CSS (custom properties, light/dark themes) |
+| Script | Vanilla JavaScript (`scripts.js`, `i18n.js`) |
+| Fonts | Syne + Outfit (Google Fonts) |
+| Icons | Font Awesome + Devicon |
+| Deploy | Vercel |
 
-1. Download this repository
-2. Open the index.html file in your preferred web browser
+## Project structure
 
-**OR**
+```
+portfolio/
+├── index.html
+├── css/styles.css
+├── js/
+│   ├── scripts.js
+│   └── i18n.js
+├── img/
+├── pdf/
+│   ├── GiuliaFreulonCV-PT.pdf
+│   └── GiuliaFreulonCV-EN.pdf
+├── README.md
+└── LICENSE
+```
 
-- Visit this link: [my portfolio](https://giulia-freulon-portfolio.vercel.app)
+## Installation and usage
+
+To view this project locally:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/GiuliaFreulon/portfolio.git
+   ```
+2. Open `index.html` in your preferred browser  
+   **or** serve the folder with a simple static server:
+   ```bash
+   npx serve .
+   ```
+
+You can also visit the live site: [my portfolio](https://giulia-freulon-portfolio.vercel.app)
+
+## Contact
+
+Feel free to reach out:
+
+- **Email:** [giuliaaraujof@hotmail.com](mailto:giuliaaraujof@hotmail.com)
+- **GitHub:** [GiuliaFreulon](https://github.com/GiuliaFreulon)
+- **LinkedIn:** [giulia-freulon](https://linkedin.com/in/giulia-freulon-8a01752a5)
 
 ## License
 
