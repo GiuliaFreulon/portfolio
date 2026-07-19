@@ -1,59 +1,164 @@
-let lastScrollTop = 0; // Armazena a posição de rolagem anterior
-const navbar = document.querySelector("header nav"); // Seleciona a navbar
-let isMouseOver = false; // Flag para verificar se o mouse está sobre a navbar
-const hamburgerMenu = document.querySelector(".hamburger-menu");
-const navbarItems = document.querySelector(".navbar-items");
+const header = document.querySelector(".site-header");
+const hamburger = document.querySelector(".hamburger");
+const navLinks = document.querySelector(".nav-links");
+const yearEl = document.getElementById("year");
+const langToggle = document.getElementById("lang-toggle");
+const themeToggle = document.getElementById("theme-toggle");
 
-// Garante que a navbar esteja visível ao carregar a página
-window.addEventListener("load", function () {
-  navbar.classList.add("header-initial");
-  // Remove a classe header-initial após a página carregar
-  setTimeout(() => {
-    navbar.classList.remove("header-initial");
-    navbar.classList.add("showing-nav");
-  }, 100);
-});
+const LANG_KEY = "portfolio-lang";
+const LANG_SET_KEY = "portfolio-lang-set";
+const THEME_KEY = "portfolio-theme";
 
-// Atualiza a visibilidade da navbar com base na rolagem
-function handleScroll() {
-  let currentScroll = window.pageYOffset || document.documentElement.scrollTop; // Posição atual de rolagem
+let lastScrollY = 0;
+let ticking = false;
 
-  if (!isMouseOver) {
-    if (currentScroll > lastScrollTop) {
-      // Rolando para baixo
-      navbar.classList.remove("showing-nav");
-      navbar.classList.add("hiding-nav");
-    } else {
-      // Rolando para cima
-      navbar.classList.remove("hiding-nav");
-      navbar.classList.add("showing-nav");
-    }
+function getLang() {
+  const stored = localStorage.getItem(LANG_KEY);
+  // Só usa inglês se o usuário tiver escolhido explicitamente
+  if (stored === "en" && localStorage.getItem(LANG_SET_KEY) === "1") {
+    return "en";
   }
-  lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // Atualiza a posição de rolagem anterior
+  return "pt";
 }
 
-window.addEventListener("scroll", handleScroll);
+function getTheme() {
+  return (
+    document.documentElement.getAttribute("data-theme") ||
+    localStorage.getItem(THEME_KEY) ||
+    "dark"
+  );
+}
 
-// Mostrar a navbar quando o mouse estiver sobre o cabeçalho
-document.querySelector("header").addEventListener("onmouseover", function () {
-  isMouseOver = true; // Define a flag como verdadeira quando o mouse está sobre a navbar
-  navbar.classList.remove("hiding-nav"); // Remove a classe para mostrar a navbar completamente
-  navbar.classList.add("showing-nav");
+function setTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem(THEME_KEY, theme);
+
+  const dict = translations[getLang()] || translations.pt;
+  if (themeToggle) {
+    themeToggle.setAttribute(
+      "aria-label",
+      theme === "dark" ? dict["ctrl.themeAriaLight"] : dict["ctrl.themeAriaDark"]
+    );
+  }
+}
+
+function setLang(lang, { persist = false } = {}) {
+  const next = lang === "en" ? "en" : "pt";
+
+  if (persist) {
+    localStorage.setItem(LANG_KEY, next);
+    localStorage.setItem(LANG_SET_KEY, "1");
+  }
+
+  document.documentElement.setAttribute("data-lang", next);
+  applyLanguage(next);
+}
+
+if (yearEl) {
+  yearEl.textContent = String(new Date().getFullYear());
+}
+
+setTheme(getTheme());
+setLang(getLang());
+
+langToggle?.addEventListener("click", () => {
+  setLang(getLang() === "pt" ? "en" : "pt", { persist: true });
 });
 
-// Ocultar a navbar quando o mouse sair do cabeçalho
-document.querySelector("header").addEventListener("onmouseout", function () {
-  isMouseOver = false; // Define a flag como falsa quando o mouse sai da navbar
-  handleScroll(); // Verifica a rolagem atual e aplica o estilo apropriado
+themeToggle?.addEventListener("click", () => {
+  setTheme(getTheme() === "dark" ? "light" : "dark");
 });
 
-// Adiciona uma pequena margem para o mouse sair do cabeçalho
-document.querySelector("header").addEventListener("onmouseleave", function () {
-  isMouseOver = false;
-  handleScroll();
+function updateHeader() {
+  const currentY = window.scrollY;
+
+  if (currentY > 24) {
+    header.classList.add("is-scrolled");
+  } else {
+    header.classList.remove("is-scrolled");
+  }
+
+  if (currentY > lastScrollY && currentY > 120) {
+    header.classList.add("is-hidden");
+  } else {
+    header.classList.remove("is-hidden");
+  }
+
+  lastScrollY = currentY;
+  ticking = false;
+}
+
+window.addEventListener(
+  "scroll",
+  () => {
+    if (!ticking) {
+      window.requestAnimationFrame(updateHeader);
+      ticking = true;
+    }
+  },
+  { passive: true }
+);
+
+hamburger?.addEventListener("click", () => {
+  const isOpen = navLinks.classList.toggle("active");
+  hamburger.classList.toggle("active", isOpen);
+  hamburger.setAttribute("aria-expanded", String(isOpen));
+
+  const dict = translations[getLang()] || translations.pt;
+  hamburger.setAttribute(
+    "aria-label",
+    isOpen ? dict["nav.menuClose"] : dict["nav.menuOpen"]
+  );
 });
 
-hamburgerMenu.addEventListener("click", () => {
-  navbarItems.classList.toggle("active");
-  hamburgerMenu.classList.toggle("active");
+navLinks?.querySelectorAll("a").forEach((link) => {
+  link.addEventListener("click", () => {
+    navLinks.classList.remove("active");
+    hamburger?.classList.remove("active");
+    hamburger?.setAttribute("aria-expanded", "false");
+
+    const dict = translations[getLang()] || translations.pt;
+    hamburger?.setAttribute("aria-label", dict["nav.menuOpen"]);
+  });
+});
+
+const revealEls = document.querySelectorAll(".reveal");
+
+if ("IntersectionObserver" in window) {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+  );
+
+  revealEls.forEach((el) => observer.observe(el));
+} else {
+  revealEls.forEach((el) => el.classList.add("is-visible"));
+}
+
+const timelineItems = document.querySelectorAll("[data-timeline-item]");
+
+timelineItems.forEach((item) => {
+  const toggle = item.querySelector(".timeline-toggle");
+
+  toggle?.addEventListener("click", () => {
+    const willOpen = !item.classList.contains("is-open");
+
+    timelineItems.forEach((other) => {
+      const otherToggle = other.querySelector(".timeline-toggle");
+      other.classList.remove("is-open");
+      otherToggle?.setAttribute("aria-expanded", "false");
+    });
+
+    if (willOpen) {
+      item.classList.add("is-open");
+      toggle.setAttribute("aria-expanded", "true");
+    }
+  });
 });
